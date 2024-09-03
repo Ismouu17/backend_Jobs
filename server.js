@@ -38,6 +38,8 @@ app.use(cors());
 app.use(express.json());
 app.use(passportConfig.initialize());
 
+app.use("/auth", require("./routes/authRoutes"));
+
 
 
 app.listen(port, () => {
