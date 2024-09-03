@@ -32,7 +32,7 @@ passport.use(
         }
         if (!user) {
           return done(null, false, {
-            message: "User does not exist",
+            message: "L'utilisateur n'existe pas",
           });
         }
 
@@ -44,7 +44,7 @@ passport.use(
           })
           .catch((err) => {
             return done(err, false, {
-              message: "Password is incorrect.",
+              message: "Le mot de passe est incorrect.",
             });
           });
       });
@@ -64,7 +64,7 @@ passport.use(
           console.log(Object.keys(jwt_payload));
           if (!user) {
             return done(null, false, {
-              message: "JWT Token does not exist",
+              message: "JWT Token n existe pas",
             });
           }
           user["_doc"] = filterJson(user["_doc"], ["password", "__v"]);
@@ -72,7 +72,7 @@ passport.use(
         })
         .catch((err) => {
           return done(err, false, {
-            message: "Incorrect Token",
+            message: "Token Invalide",
           });
         });
     }
