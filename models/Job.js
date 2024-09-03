@@ -30,13 +30,13 @@ let schema = new mongoose.Schema(
       validate: [
         {
           validator: Number.isInteger,
-          msg: "Le nombre de positions max doit etre un entier",
+          msg: "Le niveau max doit etre un entier",
         },
         {
           validator: function (value) {
             return value > 0;
           },
-          msg: "le nombre de position max doit etre supérieur à 0",
+          msg: "le niveau max doit etre supérieur à 0",
         },
       ],
     },
