@@ -33,13 +33,14 @@ const port = 4444;
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 app.use(cors());
 app.use(express.json());
 app.use(passportConfig.initialize());
 
 app.use("/auth", require("./routes/authRoutes"));
 app.use("/api", require("./routes/apiRoutes"));
+app.use("/upload", require("./routes/uploadRoutes"));
+app.use("/host", require("./routes/downloadRoutes"));
 
 
 
