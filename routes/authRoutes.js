@@ -9,14 +9,16 @@ const Recruiter = require("../models/Recruiter");
 
 const router = express.Router();
 
+
 router.post("/signup", (req, res) => {
   const data = req.body;
+  console.log(data);
   let user = new User({
     email: data.email,
     password: data.password,
     type: data.type,
   });
-
+  
   user
     .save()
     .then(() => {
@@ -37,7 +39,6 @@ router.post("/signup", (req, res) => {
               resume: data.resume,
               profile: data.profile,
             });
-
       userDetails
         .save()
         .then(() => {

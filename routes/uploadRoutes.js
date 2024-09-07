@@ -1,68 +1,50 @@
 const express = require("express");
-const multer = require("multer")
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 const { promisify } = require("util");
-
 const pipeline = promisify(require("stream").pipeline);
+const expressFileUpload = require("express-fileupload");
+const fileUpload = require("express-fileupload");
+const path = require("path");
+
+const profileFolder = path.join(`${__dirname}/../public/profile`)
+const resumeFolder = path.join(`${__dirname}/../public/resume`)
 
 const router = express.Router();
+router.use(fileUpload())
 
-const upload = multer();
-
-router.post("/resume", upload.single("file"), (req, res) => {
-  const { file } = req;
-  if (file.detectedFileExtension != ".pdf") {
-    res.status(400).json({
-      message: "Format de fichier invalide",
-    });
-  } else {
-    const filename = `${uuidv4()}${file.detectedFileExtension}`;
-    pipeline(
-      file.stream,
-      fs.createWriteStream(`${__dirname}/../public/resume/${filename}`)
-    )
-      .then(() => {
-        res.send({
-          message: "Fichier envoyé avec succes",
-          url: `/host/resume/${filename}`,
-        });
-      })
-      .catch((err) => {
-        res.status(400).json({
-          message: "Erreur lors de l'envoi du fichier",
-        });
-      });
-  }
-});
-
-router.post("/profile", upload.single("file"), (req, res) => {
-  const { file } = req;
+router.post("/resume", (req, res) => {
+  const { file } = req.files
   if (
-    file.detectedFileExtension != ".jpg" &&
-    file.detectedFileExtension != ".png"
+    file.name.split(".")[1] != "pdf"
   ) {
     res.status(400).json({
       message: "Format de fichier invalide",
     });
   } else {
-    const filename = `${uuidv4()}${file.detectedFileExtension}`;
-
-    pipeline(
-      file.stream,
-      fs.createWriteStream(`${__dirname}/../public/profile/${filename}`)
-    )
-      .then(() => {
+        file.mv(path.join(resumeFolder, file.name))
         res.send({
-          message: "Profile image uploaded successfully",
-          url: `/host/profile/${filename}`,
+          message: "CV Enregistré avec succes",
+          url: `/host/resume/${file.name}`,
         });
-      })
-      .catch((err) => {
-        res.status(400).json({
-          message: "Error while uploading",
+  }
+});
+
+router.post("/profile", (req, res) => {
+  const { file } = req.files
+  if (
+    file.name.split(".")[1] != "jpg" &&
+    file.name.split(".")[1] != "png"
+  ) {
+    res.status(400).json({
+      message: "Format de fichier invalide",
+    });
+  } else {
+        file.mv(path.join(profileFolder, file.name))
+        res.send({
+          message: "Photo de profil enregistrée avec succes",
+          url: `/host/profile/${file.name}`,
         });
-      });
   }
 });
 
